@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&family=Josefin+Sans&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+    <title>IOT</title>
+</head>
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: #1c1d1e;
+        color: #f5f5f5;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .title {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        margin: 3%;
+    }
+
+    .container {
+        margin: 1%;
+        background: #333;
+        padding: 4em;
+        padding-top: 2em;
+        border-radius: 10px;
+    }
+
+    .container.active {
+        filter: blur(20px);
+        pointer-events: none;
+    }
+
+    .name {
+        margin-bottom: 20%;
+    }
+
+    .reading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        margin: 8%;
+        background: #1c1d1e;
+        border: 2px solid #f5f5f5;
+        border-radius: 100%;
+    }
+
+    .reading p {
+        width: 100px;
+        height: 100px;
+        font-size: 2rem;
+        text-align: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .history {
+        margin: 3%;
+    }
+
+    .history button {
+        background: #333;
+        color: #f5f5f5;
+        outline: none;
+        border: none;
+        padding: 1em;
+        border-radius: 5px;
+        font-family: 'Josefin Sans', sans-serif;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        cursor: pointer;
+    }
+
+
+    .logs {
+        position: absolute;
+        top: 35%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+
+        border-radius: 30px;
+        background: #ffffff;
+        padding: 4em;
+        padding-top: .5em;
+        color: #333;
+        transition: .5s;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+    .logs.active {
+        opacity: 1;
+        pointer-events: visible;
+    }
+
+    .logs .title {
+        margin: 10%;
+    }
+
+
+    .bar {
+        background: #333;
+        border-radius: 5px;
+        padding: .8em;
+        color: #f5f5ff;
+        margin-bottom: 7%;
+    }
+
+    .bar h2 span {
+        font-size: .9rem;
+        padding-left: 20px;
+    }
+</style>
+
+<body>
+    <div class="title">
+        <h2>Devices <i class="fa fa-cogs" aria-hidden="true"></i></h2>
+    </div>
+
+    <div class="container">
+        <div class="name">
+            <h2>Temperature <i class="fa fa-thermometer-full" aria-hidden="true"></i></h2>
+        </div>
+
+        <div class="reading">
+            <!-- <p>29&#8451</p> -->
+        </div>
+
+
+    </div>
+
+    <div class="logs">
+        <div class="title">
+            <h2>History <i class="fa fa-history" aria-hidden="true"></i></h2>
+        </div>
+
+        <div class="tempLogs">
+
+        </div>
+    </div>
+
+    <div class="history">
+        <button id="data">Get Data</button>
+    </div>
+</body>
+<script>
+
+    // Get Data Button
+    const dataButton = document.querySelector("#data");
+    const readingBox = document.querySelector(".reading");
+
+
+    const tempLogs = document.querySelector(".tempLogs");
+    const logBox = document.querySelector(".logs");
+    const container = document.querySelector(".container");
+
+
+    dataButton.addEventListener("click", function () {
+
+        // CSS part
+        // logBox.classList.toggle("active");
+        // container.classList.toggle("active");
+
+
+        // Request server to send sensor data !
+
+        fetch('/getData')
+            .then(res => res.json())
+            .then((result) => {
+                console.log(result);  //Response from server
+
+                readingBox.innerHTML = `<p>${result.data[result.data.length - 1]}&#8451</p>`
+            })
+            .catch(function (err) {
+                console.log(err);
+            });
+
+
+
+
+        // let html = "";
+
+
+        // html += `<div class="bar">
+        //             <h2>29&#8451 <span>29secs ago...</span></h2>
+        //          </div>
+        //          <div class="bar">
+        //             <h2>29&#8451 <span>29secs ago...</span></h2>
+        //          </div>
+        //          `;
+
+        // tempLogs.innerHTML = html;
+    })
+
+</script>
+
+</html>
